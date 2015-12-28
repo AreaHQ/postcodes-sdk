@@ -1,6 +1,6 @@
 # IdealPostcodes SDK
 
-SDK for [IdealPostcodes](https://ideal-postcodes.co.uk)] API.
+SDK for [IdealPostcodes](https://ideal-postcodes.co.uk) API.
 
 Example usage:
 
