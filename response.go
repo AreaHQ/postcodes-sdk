@@ -4,5 +4,5 @@ package idealpostcodes
 type GetPostcodeResponse struct {
 	Result  []*Address `json:"result"`
 	Code    int        `json:"code"`
-	Message string     `json:"string"`
+	Message string     `json:"message"`
 }

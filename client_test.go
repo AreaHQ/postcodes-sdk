@@ -1,42 +1,31 @@
 package idealpostcodes
 
 import (
-	"fmt"
 	"io/ioutil"
 	"log"
-	"net/http"
-	"net/http/httptest"
-	"net/url"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
-func testTools(code int, body string) (*httptest.Server, *Client) {
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(code)
-		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprintln(w, body)
-	}))
-
-	transport := &http.Transport{
-		Proxy: func(req *http.Request) (*url.URL, error) {
-			return url.Parse(server.URL)
-		},
+func TestGetPostcodeNotFound(t *testing.T) {
+	data, err := ioutil.ReadFile("mock_responses/not_found.json")
+	if err != nil {
+		log.Fatal(err)
 	}
 
-	httpClient := &http.Client{Transport: transport}
-	client := NewClient(
-		"http://endpoint",
-		"the_api_key",
-		httpClient,
-	)
+	server, client := testTools(404, string(data))
+	defer server.Close()
 
-	return server, client
+	addresses, err := client.GetPostcode("ID11QD")
+
+	if assert.Nil(t, addresses) {
+		assert.Equal(t, "Postcode Not Found", err.Error())
+	}
 }
 
 func TestGetPostcode(t *testing.T) {
-	data, err := ioutil.ReadFile("_mock_data/get_postcode.json")
+	data, err := ioutil.ReadFile("mock_responses/get_postcode.json")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -51,10 +40,7 @@ func TestGetPostcode(t *testing.T) {
 		assert.Equal(t, "ID1 1QD", addresses[0].Postcode)
 		assert.Equal(t, "LONDON", addresses[0].PostTown)
 		assert.Equal(t, "Barons Court Road", addresses[0].Thoroughfare)
-
-		log.Print(addresses[0].UDPRN)
-
-		assert.Equal(t, 25962203, int64(addresses[0].UDPRN))
+		assert.Equal(t, int64(25962203), addresses[0].UDPRN)
 		assert.Equal(t, "2 Barons Court Road", addresses[0].Line1)
 		assert.Equal(t, "", addresses[0].Line2)
 		assert.Equal(t, "", addresses[0].Line3)
@@ -63,10 +49,21 @@ func TestGetPostcode(t *testing.T) {
 		assert.Equal(t, "Greater London", addresses[0].TraditionalCounty)
 		assert.Equal(t, "Hammersmith and Fulham", addresses[0].District)
 		assert.Equal(t, "North End", addresses[0].Ward)
-		assert.Equal(t, interface{}(-0.208644362766368), addresses[0].Longitude)
-		assert.Equal(t, interface{}(51.4899488390558), addresses[0].Latitude)
 
-		// assert.Equal(t, interface{}(524466), addresses[0].Eastings)
-		// assert.Equal(t, interface{}(178299), addresses[0].Northings)
+		longitude, ok := addresses[0].Longitude.(float64)
+		assert.True(t, ok)
+		assert.Equal(t, float64(-0.208644362766368), longitude)
+
+		latitude, ok := addresses[0].Latitude.(float64)
+		assert.True(t, ok)
+		assert.Equal(t, float64(51.4899488390558), latitude)
+
+		eastings, ok := addresses[0].Eastings.(float64)
+		assert.True(t, ok)
+		assert.Equal(t, float64(524466), eastings)
+
+		northings, ok := addresses[0].Northings.(float64)
+		assert.True(t, ok)
+		assert.Equal(t, float64(178299), northings)
 	}
 }

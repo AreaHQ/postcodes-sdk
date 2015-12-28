@@ -52,13 +52,11 @@ func (c *Client) GetPostcode(postcode string) ([]*Address, error) {
 		return nil, err
 	}
 
-	// Log the response
-	log.Printf("%s", resp.Body)
-
 	// Unmarshall into our struct
 	getPostResponse := new(GetPostcodeResponse)
-	log.Print(string(data))
 	if err := json.Unmarshal(data, getPostResponse); err != nil {
+		// Log the response
+		log.Printf("%s", resp.Body)
 		return nil, err
 	}
 
