@@ -16,7 +16,7 @@ import(
 // ...
 
 client := idealpostcodes.NewClient(
-  "https://api.ideal-postcodes.co.uk/v1",
+  idealpostcodes.Endpoint,
   "your_api_key",
   new(http.Client),
 )

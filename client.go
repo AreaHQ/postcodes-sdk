@@ -10,17 +10,20 @@ import (
 	"net/url"
 )
 
+// Endpoint is the API base URI
+const Endpoint = "https://api.ideal-postcodes.co.uk/v1"
+
 // Client for https://ideal-postcodes.co.uk API
 type Client struct {
-	host       string
+	endpoint   string
 	apiKey     string
 	httpClient *http.Client
 }
 
 // NewClient returns new Client instance
-func NewClient(host string, apiKey string, httpClient *http.Client) *Client {
+func NewClient(endpoint string, apiKey string, httpClient *http.Client) *Client {
 	return &Client{
-		host:       host,
+		endpoint:   endpoint,
 		apiKey:     apiKey,
 		httpClient: httpClient,
 	}
@@ -33,7 +36,7 @@ func (c *Client) GetPostcode(postcode string) ([]*Address, error) {
 	payload.Add("api_key", c.apiKey)
 	req, err := http.NewRequest(
 		"GET",
-		fmt.Sprintf("%s/postcodes/%s?%s", c.host, postcode, payload.Encode()),
+		fmt.Sprintf("%s/postcodes/%s?%s", c.endpoint, postcode, payload.Encode()),
 		nil,
 	)
 	if err != nil {
