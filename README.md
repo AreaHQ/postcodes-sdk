@@ -10,13 +10,13 @@ Example usage:
 import(
   "net/http"
 
-  idealpostcodes "github.com/areatech/idealpostcodes-sdk"
+  postcodes "github.com/areatech/postcodes-sdk"
 )
 
 // ...
 
 client := idealpostcodes.NewClient(
-  idealpostcodes.Endpoint,
+  postcodes.Endpoint,
   "your_api_key",
   new(http.Client),
 )
