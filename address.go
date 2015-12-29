@@ -19,7 +19,7 @@ type Address struct {
 	UDPRN                   int64       `json:"udprn"`
 	PostcodeType            string      `json:"postcode_type"`
 	SuOrganisationIndicator string      `json:"su_organisation_indicator"`
-	DeliveryPointSuffux     string      `json:"delivery_point_suffix"`
+	DeliveryPointSuffix     string      `json:"delivery_point_suffix"`
 	Line1                   string      `json:"line_1"`
 	Line2                   string      `json:"line_2"`
 	Line3                   string      `json:"line_3"`
