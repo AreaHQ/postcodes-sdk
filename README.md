@@ -2,7 +2,7 @@
 
 # Postcodes SDK
 
-SDK for [IdealPostcodes.co.uk](https://ideal-postcodes.co.uk) API. This library will first try to use the open data from [Postcodes.io](http://postcodes.io/) and fallback to [IdealPostcodes.co.uk](https://ideal-postcodes.co.uk).
+SDK for [ideal-postcodes.co.uk](https://ideal-postcodes.co.uk) API.
 
 Example usage:
 
