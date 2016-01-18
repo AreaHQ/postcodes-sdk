@@ -8,17 +8,17 @@ Example usage:
 
 ```go
 import(
-  "net/http"
+	"net/http"
 
-  postcodes "github.com/areatech/postcodes-sdk"
+	postcodes "github.com/areatech/postcodes-sdk"
 )
 
 // ...
 
 client := postcodes.NewClient(
-  postcodes.Endpoint,
-  "your_api_key",
-  new(http.Client),
+	postcodes.Endpoint,
+	"your_api_key",
+	new(http.Client),
 )
 
 addresses, err := client.GetPostcode("ID11QD")
