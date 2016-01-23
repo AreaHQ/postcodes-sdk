@@ -1,12 +1,40 @@
 package idealpostcodes
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
+	"net/http"
+	"net/http/httptest"
+	"net/url"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
+
+// testServer returns a mock HTTP server for unit testing
+func testServer(code int, body string) (*httptest.Server, *Client) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(code)
+		w.Header().Set("Content-Type", "application/json")
+		fmt.Fprintln(w, body)
+	}))
+
+	transport := &http.Transport{
+		Proxy: func(req *http.Request) (*url.URL, error) {
+			return url.Parse(server.URL)
+		},
+	}
+
+	httpClient := &http.Client{Transport: transport}
+	client := NewClient(
+		"http://endpoint",
+		"the_api_key",
+		httpClient,
+	)
+
+	return server, client
+}
 
 func TestGetPostcodeNotFound(t *testing.T) {
 	data, err := ioutil.ReadFile("mock_responses/not_found.json")
@@ -14,7 +42,7 @@ func TestGetPostcodeNotFound(t *testing.T) {
 		log.Fatal(err)
 	}
 
-	server, client := testTools(404, string(data))
+	server, client := testServer(404, string(data))
 	defer server.Close()
 
 	addresses, err := client.GetPostcode("ID11QD")
@@ -30,7 +58,7 @@ func TestGetPostcode(t *testing.T) {
 		log.Fatal(err)
 	}
 
-	server, client := testTools(200, string(data))
+	server, client := testServer(200, string(data))
 	defer server.Close()
 
 	addresses, err := client.GetPostcode("ID11QD")

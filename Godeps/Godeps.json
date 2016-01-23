@@ -1,5 +1,5 @@
 {
-	"ImportPath": "github.com/areatech/postcodes-sdk",
+	"ImportPath": "github.com/AreaHQ/postcodes-sdk",
 	"GoVersion": "go1.5",
 	"Packages": [
 		"./..."
