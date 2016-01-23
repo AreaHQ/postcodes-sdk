@@ -7,19 +7,23 @@ SDK for [ideal-postcodes.co.uk](https://ideal-postcodes.co.uk) API.
 Example usage:
 
 ```go
+package main
+
 import(
 	"net/http"
 
 	postcodes "github.com/areatech/postcodes-sdk"
 )
 
-// ...
+func main() {
+	client := postcodes.NewClient(
+		postcodes.Endpoint,
+		"your_api_key",
+		new(http.Client),
+	)
 
-client := postcodes.NewClient(
-	postcodes.Endpoint,
-	"your_api_key",
-	new(http.Client),
-)
+	addresses, err := client.GetPostcode("ID11QD")
 
-addresses, err := client.GetPostcode("ID11QD")
+	// ...
+}
 ```
