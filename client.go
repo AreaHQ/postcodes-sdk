@@ -22,6 +22,9 @@ type Client struct {
 
 // NewClient returns new Client instance
 func NewClient(endpoint string, apiKey string, httpClient *http.Client) *Client {
+	if httpClient == nil {
+		httpClient = new(http.Client)
+	}
 	return &Client{
 		endpoint:   endpoint,
 		apiKey:     apiKey,
